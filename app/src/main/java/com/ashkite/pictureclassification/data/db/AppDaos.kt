@@ -27,6 +27,15 @@ interface MediaDao {
     suspend fun count(): Int
 
     @Query(
+        "SELECT * FROM media_item WHERE labelJson IS NULL " +
+            "ORDER BY dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getUnlabeledMedia(limit: Int): List<MediaItemEntity>
+
+    @Query("UPDATE media_item SET labelJson = :labelJson WHERE uri = :uri")
+    suspend fun updateLabel(uri: String, labelJson: String)
+
+    @Query(
         "SELECT localDate AS localDate, COUNT(*) AS count " +
             "FROM media_item GROUP BY localDate ORDER BY localDate DESC LIMIT :limit"
     )

@@ -75,7 +75,7 @@ fun MediaGridScreen(
                 val target = tagTarget
                 if (target != null) {
                     scope.launch(Dispatchers.IO) {
-                        tagRepository.addTagToMedia(target.uri, type.value, name)
+                        tagRepository.addManualTagToMedia(target.uri, type.value, name)
                     }
                 }
                 tagTarget = null

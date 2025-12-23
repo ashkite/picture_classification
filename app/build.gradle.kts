@@ -53,6 +53,10 @@ android {
         compose = true
     }
 
+    androidResources {
+        noCompress += "tflite"
+    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
     }
@@ -98,6 +102,7 @@ dependencies {
 
     implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("io.coil-kt:coil-video:2.5.0")
+    implementation("org.tensorflow:tensorflow-lite:2.14.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 

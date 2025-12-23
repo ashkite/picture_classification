@@ -3,7 +3,8 @@
 Goal: event classification on-device with high precision (low false positives).
 
 ## Model choice
-- Base: EfficientNet-Lite0 (input 224x224)
+- MVP base: MobileNetV2 (ImageNet, input 224x224) for quick on-device tagging
+- Target: EfficientNet-Lite0 or custom multi-label model
 - Output: multi-label categories (sigmoid)
 - Loss: BCE or Focal (precision-friendly)
 
@@ -42,6 +43,10 @@ Goal: event classification on-device with high precision (low false positives).
 - TFLite Interpreter + NNAPI (optional)
 - Batch inference in WorkManager
 - Threshold: default 0.8, prefer no-tag over wrong tag
+
+## MVP note
+- Current app ships with a generic ImageNet model for baseline tagging
+- Replace `app/src/main/assets/models/event_model.tflite` and `event_labels.txt` when a custom model is ready
 
 ## Update strategy
 - v1: bundle model in APK

@@ -42,6 +42,7 @@ Goal: map dataset labels to app event categories with precision-first rules.
 - Night/Evening: night, city lights, nightscape
 
 ## Dataset notes
+- MVP uses ImageNet labels (MobileNetV2) and keyword-based mapping
 - Places365: use scene labels (e.g., beach, forest, office)
 - Open Images: use object labels cautiously (food, dog, cat)
 - Food-101: map directly to Food/Restaurant

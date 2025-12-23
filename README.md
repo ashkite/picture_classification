@@ -16,7 +16,7 @@
 - EXIF/메타데이터 파싱 및 날짜/시간 보정
 - 오프라인 역지오코딩으로 도시/국가 매핑
 - 위치 없는 항목은 별도 폴더로 분리
-- 인물/이벤트 태그(수동 태깅 포함, 자동 분류는 모델 연동 예정)
+- 인물/이벤트 태그(수동 태깅 + TFLite 자동 분류)
 - Compose UI: 장소/날짜/인물/이벤트/위치없음 탭
 - 분류 수정/병합/태그 편집
 
@@ -28,8 +28,8 @@
 
 ## ML 파이프라인 (TFLite)
 
-- **이벤트 분류**: EfficientNet-Lite0 기반 멀티라벨 분류기
-- **인물 판별**: BlazeFace 얼굴 검출 → 얼굴 >= 1이면 인물
+- **이벤트 분류**: MobileNetV2(ImageNet) 기반 MVP 자동 태깅 → 추후 커스텀 모델 교체
+- **인물 판별**: 기본은 수동 태깅, 자동 인식은 모델 교체 시 확장
 - **선택 기능**: 얼굴 임베딩(예: MobileFaceNet) + 클러스터링(DBSCAN)로
   사용자 라벨링(이 사람은 누구?) 지원
 - **정확도 정책**: 오탐보다 미탐 우선, 불확실하면 미태깅
@@ -63,6 +63,7 @@
 - `docs/privacy_policy.md`: 프라이버시 정책 초안
 - `docs/release.md`: Play Console 릴리즈 가이드
 - `docs/data_safety.md`: 데이터 안전성(Play Console) 초안
+- `docs/tflite_pipeline.md`: 모델 교체/학습 파이프라인
 - `tools/geonames/build_cities_csv.py`: GeoNames CSV 생성 스크립트
 
 ## 저장소/아키텍처 (예정)
