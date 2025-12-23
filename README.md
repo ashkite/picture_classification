@@ -16,7 +16,7 @@
 - EXIF/메타데이터 파싱 및 날짜/시간 보정
 - 오프라인 역지오코딩으로 도시/국가 매핑
 - 위치 없는 항목은 별도 폴더로 분리
-- 인물/이벤트 태그(높은 신뢰도만 부여)
+- 인물/이벤트 태그(수동 태깅 포함, 자동 분류는 모델 연동 예정)
 - Compose UI: 장소/날짜/인물/이벤트/위치없음 탭
 - 분류 수정/병합/태그 편집
 
@@ -60,6 +60,10 @@
 - `docs/tflite_pipeline.md`: 모델 학습/변환/배포 파이프라인
 - `docs/label_mapping.md`: 이벤트 카테고리 라벨 매핑 초안
 - `docs/offline_geocoding.md`: 오프라인 도시 매핑 설계
+- `docs/privacy_policy.md`: 프라이버시 정책 초안
+- `docs/release.md`: Play Console 릴리즈 가이드
+- `docs/data_safety.md`: 데이터 안전성(Play Console) 초안
+- `tools/geonames/build_cities_csv.py`: GeoNames CSV 생성 스크립트
 
 ## 저장소/아키텍처 (예정)
 

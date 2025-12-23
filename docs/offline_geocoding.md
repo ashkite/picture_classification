@@ -12,6 +12,9 @@ Goal: map GPS coordinates to a city/country on-device without network.
 - Seeder runs once on app start via WorkManager
 - Replace the sample CSV with a full dataset for production
 
+## Build helper
+- `tools/geonames/build_cities_csv.py` downloads GeoNames cities15000 and rewrites the CSV
+
 ## Storage
 - Preprocess into SQLite (or Room import) at build time
 - Columns: id, name_ko, name_en, country_code, lat, lon, geohash

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.ashkite.pictureclassification.ui.HomeScreen
+import com.ashkite.pictureclassification.ui.AppNavHost
 import com.ashkite.pictureclassification.ui.theme.PictureClassificationTheme
 import com.ashkite.pictureclassification.worker.CitySeedScheduler
 
@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen()
+                    AppNavHost()
                 }
             }
         }

@@ -5,11 +5,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,9 +37,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.ashkite.pictureclassification.data.model.DateCount
 import com.ashkite.pictureclassification.data.model.PlaceCount
-import com.ashkite.pictureclassification.data.model.TagCount
 import com.ashkite.pictureclassification.worker.MediaScanScheduler
 import java.time.Instant
 import java.time.ZoneId
@@ -44,21 +45,17 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewModel()) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel(),
+    onPlaceClick: (Long) -> Unit,
+    onDateClick: (String) -> Unit,
+    onTagClick: (String, Long) -> Unit,
+    onUnknownClick: () -> Unit,
+    onUnknownDateClick: (String) -> Unit
+) {
     val context = LocalContext.current
     val uiState by viewModel.state.collectAsState()
-    val placeLines = uiState.placeCounts.map { formatPlace(it) }
-    val dateLines = uiState.dateCounts.map { formatDateCount(it) }
-    val peopleLines = uiState.peopleCounts.map { formatTagCount(it) }
-    val eventLines = uiState.eventCounts.map { formatTagCount(it) }
-    val unknownLines = if (uiState.unknownTotal == 0 && uiState.unknownDateCounts.isEmpty()) {
-        emptyList()
-    } else {
-        buildList {
-            add("Total: ${uiState.unknownTotal}")
-            addAll(uiState.unknownDateCounts.map { formatDateCount(it) })
-        }
-    }
 
     val requiredPermissions = remember { buildPermissions() }
     var hasReadPermission by remember {
@@ -98,6 +95,57 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
         }
     }
 
+    val placeRows = uiState.placeCounts.map { place ->
+        SectionRow(
+            title = formatPlaceName(place),
+            count = place.count,
+            onClick = { onPlaceClick(place.cityId) }
+        )
+    }
+    val dateRows = uiState.dateCounts.map { date ->
+        SectionRow(
+            title = date.localDate,
+            count = date.count,
+            onClick = { onDateClick(date.localDate) }
+        )
+    }
+    val peopleRows = uiState.peopleCounts.map { tag ->
+        SectionRow(
+            title = tag.name,
+            count = tag.count,
+            onClick = { onTagClick(tag.type, tag.tagId) }
+        )
+    }
+    val eventRows = uiState.eventCounts.map { tag ->
+        SectionRow(
+            title = tag.name,
+            count = tag.count,
+            onClick = { onTagClick(tag.type, tag.tagId) }
+        )
+    }
+    val unknownRows = if (uiState.unknownTotal == 0 && uiState.unknownDateCounts.isEmpty()) {
+        emptyList()
+    } else {
+        buildList {
+            add(
+                SectionRow(
+                    title = "All unknown",
+                    count = uiState.unknownTotal,
+                    onClick = onUnknownClick
+                )
+            )
+            uiState.unknownDateCounts.forEach { date ->
+                add(
+                    SectionRow(
+                        title = date.localDate,
+                        count = date.count,
+                        onClick = { onUnknownDateClick(date.localDate) }
+                    )
+                )
+            }
+        }
+    }
+
     Scaffold(
         topBar = { TopAppBar(title = { Text("Picture Classification") }) }
     ) { padding ->
@@ -121,7 +169,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
                 Card {
                     val lastScan = formatEpoch(uiState.lastScanEpoch)
                     val lastSuccess = formatEpoch(uiState.lastSuccessEpoch)
-                    androidx.compose.foundation.layout.Column(modifier = Modifier.padding(16.dp)) {
+                    Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = "Scan status: $scanStateLabel",
                             style = MaterialTheme.typography.titleSmall
@@ -180,35 +228,35 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
             item {
                 SectionCard(
                     title = "Places",
-                    lines = placeLines,
+                    rows = placeRows,
                     emptyText = "No location data yet."
                 )
             }
             item {
                 SectionCard(
                     title = "Dates",
-                    lines = dateLines,
+                    rows = dateRows,
                     emptyText = "No date groups yet."
                 )
             }
             item {
                 SectionCard(
                     title = "People",
-                    lines = peopleLines,
+                    rows = peopleRows,
                     emptyText = "No people tags yet."
                 )
             }
             item {
                 SectionCard(
                     title = "Events",
-                    lines = eventLines,
+                    rows = eventRows,
                     emptyText = "No event tags yet."
                 )
             }
             item {
                 SectionCard(
                     title = "Location Unknown",
-                    lines = unknownLines,
+                    rows = unknownRows,
                     emptyText = "No unknown-location items."
                 )
             }
@@ -219,6 +267,12 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
 private data class PermissionGroup(
     val read: List<String>,
     val location: List<String>
+)
+
+private data class SectionRow(
+    val title: String,
+    val count: Int,
+    val onClick: (() -> Unit)?
 )
 
 private fun buildPermissions(): PermissionGroup {
@@ -252,7 +306,7 @@ private fun formatEpoch(epoch: Long?): String {
 }
 
 @Composable
-private fun SectionCard(title: String, lines: List<String>, emptyText: String) {
+private fun SectionCard(title: String, rows: List<SectionRow>, emptyText: String) {
     Card {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -260,29 +314,38 @@ private fun SectionCard(title: String, lines: List<String>, emptyText: String) {
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.height(8.dp))
-            if (lines.isEmpty()) {
+            if (rows.isEmpty()) {
                 Text(
                     text = emptyText,
                     style = MaterialTheme.typography.bodySmall
                 )
             } else {
-                lines.forEach { line ->
-                    Text(text = line)
+                rows.forEachIndexed { index, row ->
+                    SectionRowItem(row = row)
+                    if (index != rows.lastIndex) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                    }
                 }
             }
         }
     }
 }
 
-private fun formatPlace(place: PlaceCount): String {
+@Composable
+private fun SectionRowItem(row: SectionRow) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(enabled = row.onClick != null) { row.onClick?.invoke() }
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = row.title)
+        Text(text = row.count.toString())
+    }
+}
+
+private fun formatPlaceName(place: PlaceCount): String {
     val name = if (place.nameKo.isNotBlank()) place.nameKo else place.nameEn
-    return "$name (${place.countryCode}) - ${place.count}"
-}
-
-private fun formatDateCount(count: DateCount): String {
-    return "${count.localDate} - ${count.count}"
-}
-
-private fun formatTagCount(count: TagCount): String {
-    return "${count.name} - ${count.count}"
+    return "$name (${place.countryCode})"
 }

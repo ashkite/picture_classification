@@ -49,6 +49,38 @@ interface MediaDao {
             "GROUP BY localDate ORDER BY localDate DESC LIMIT :limit"
     )
     suspend fun getUnknownDateCounts(limit: Int): List<DateCount>
+
+    @Query(
+        "SELECT * FROM media_item WHERE cityId = :cityId " +
+            "ORDER BY dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getMediaByCity(cityId: Long, limit: Int): List<MediaItemEntity>
+
+    @Query(
+        "SELECT * FROM media_item WHERE localDate = :localDate " +
+            "ORDER BY dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getMediaByDate(localDate: String, limit: Int): List<MediaItemEntity>
+
+    @Query(
+        "SELECT * FROM media_item WHERE hasLocation = 0 " +
+            "ORDER BY dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getUnknownMedia(limit: Int): List<MediaItemEntity>
+
+    @Query(
+        "SELECT * FROM media_item WHERE hasLocation = 0 AND localDate = :localDate " +
+            "ORDER BY dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getUnknownMediaByDate(localDate: String, limit: Int): List<MediaItemEntity>
+
+    @Query(
+        "SELECT media_item.* FROM media_item " +
+            "INNER JOIN media_tag ON media_item.uri = media_tag.mediaUri " +
+            "WHERE media_tag.tagId = :tagId " +
+            "ORDER BY media_item.dateTakenUtc DESC LIMIT :limit"
+    )
+    suspend fun getMediaByTag(tagId: Long, limit: Int): List<MediaItemEntity>
 }
 
 @Dao
@@ -64,12 +96,24 @@ interface CityDao {
 
     @Query("SELECT COUNT(*) FROM city")
     suspend fun count(): Int
+
+    @Query("SELECT * FROM city WHERE id = :id LIMIT 1")
+    suspend fun findById(id: Long): CityEntity?
 }
 
 @Dao
 interface TagDao {
     @Upsert
     suspend fun upsert(tag: TagEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(tag: TagEntity): Long
+
+    @Query("SELECT * FROM tag WHERE type = :type AND name = :name LIMIT 1")
+    suspend fun findByTypeAndName(type: String, name: String): TagEntity?
+
+    @Query("SELECT * FROM tag WHERE id = :id LIMIT 1")
+    suspend fun findById(id: Long): TagEntity?
 
     @Query(
         "SELECT tag.id AS tagId, tag.name AS name, tag.type AS type, " +

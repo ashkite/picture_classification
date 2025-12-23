@@ -2,6 +2,11 @@
 .gradle/
 /.idea/
 /local.properties
+keystore.properties
+*.jks
+*.keystore
+*.aab
+*.apk
 .DS_Store
 /build/
 **/build/

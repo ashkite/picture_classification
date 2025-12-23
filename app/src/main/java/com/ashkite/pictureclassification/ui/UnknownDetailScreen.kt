@@ -1,0 +1,45 @@
+package com.ashkite.pictureclassification.ui
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import com.ashkite.pictureclassification.data.db.AppDatabase
+import com.ashkite.pictureclassification.data.model.MediaItemEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+@Composable
+fun UnknownDetailScreen(localDate: String?, onBack: () -> Unit) {
+    val context = LocalContext.current.applicationContext
+    var items by remember { mutableStateOf<List<MediaItemEntity>>(emptyList()) }
+
+    LaunchedEffect(localDate) {
+        withContext(Dispatchers.IO) {
+            val database = AppDatabase.get(context)
+            items = if (localDate == null) {
+                database.mediaDao().getUnknownMedia(MEDIA_LIMIT)
+            } else {
+                database.mediaDao().getUnknownMediaByDate(localDate, MEDIA_LIMIT)
+            }
+        }
+    }
+
+    val title = if (localDate == null) {
+        "Location Unknown"
+    } else {
+        "Unknown - $localDate"
+    }
+
+    MediaGridScreen(
+        title = title,
+        subtitle = "No GPS metadata",
+        items = items,
+        onBack = onBack
+    )
+}
+
+private const val MEDIA_LIMIT = 500
