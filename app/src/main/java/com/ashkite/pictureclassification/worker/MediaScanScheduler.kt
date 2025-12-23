@@ -10,8 +10,8 @@ import androidx.work.WorkManager
 import java.util.concurrent.TimeUnit
 
 object MediaScanScheduler {
-    private const val UNIQUE_ONE_TIME = "media_scan_one_time"
-    private const val UNIQUE_PERIODIC = "media_scan_periodic"
+    const val UNIQUE_ONE_TIME = "media_scan_one_time"
+    const val UNIQUE_PERIODIC = "media_scan_periodic"
 
     fun enqueueOneTime(context: Context, force: Boolean = false) {
         val constraints = Constraints.Builder()
