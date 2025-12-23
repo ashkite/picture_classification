@@ -2,14 +2,22 @@ package com.ashkite.pictureclassification.data.scan
 
 import android.content.ContentUris
 import android.content.Context
+import android.os.Build
 import android.provider.MediaStore
+import com.ashkite.pictureclassification.data.geo.CityGeocoder
 import com.ashkite.pictureclassification.data.model.MediaItemEntity
 import java.time.Instant
 import java.time.ZoneId
-import android.os.Build
+import java.time.ZoneOffset
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class MediaStoreScanner(private val context: Context) {
-    fun scan(): List<MediaItemEntity> {
+class MediaStoreScanner(
+    private val context: Context,
+    private val metadataReader: MediaMetadataReader,
+    private val geocoder: CityGeocoder
+) {
+    suspend fun scan(): List<MediaItemEntity> = withContext(Dispatchers.IO) {
         val resolver = context.contentResolver
         val volume = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             MediaStore.VOLUME_EXTERNAL
@@ -51,10 +59,7 @@ class MediaStoreScanner(private val context: Context) {
                 val dateTaken = cursor.getLong(takenIndex)
                 val dateModified = cursor.getLong(modifiedIndex) * 1000
                 val effectiveDate = if (dateTaken > 0L) dateTaken else dateModified
-                val instant = Instant.ofEpochMilli(effectiveDate)
-                val offset = zoneId.rules.getOffset(instant)
-                val tzOffsetMin = offset.totalSeconds / 60
-                val localDate = instant.atZone(zoneId).toLocalDate().toString()
+                val defaultInstant = Instant.ofEpochMilli(effectiveDate)
 
                 val contentUri = when (mediaType) {
                     MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE ->
@@ -64,18 +69,36 @@ class MediaStoreScanner(private val context: Context) {
                     else -> ContentUris.withAppendedId(collection, id)
                 }
 
+                val isVideo = mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO
+                val metadata = metadataReader.read(contentUri, isVideo)
+                val captureInstant = metadata.captureInstant ?: defaultInstant
+                val offsetMinutes = metadata.tzOffsetMin
+                    ?: zoneId.rules.getOffset(captureInstant).totalSeconds / 60
+                val localDate = captureInstant
+                    .atOffset(ZoneOffset.ofTotalSeconds(offsetMinutes * 60))
+                    .toLocalDate()
+                    .toString()
+                val lat = metadata.lat
+                val lon = metadata.lon
+                val hasLocation = lat != null && lon != null
+                val cityId = if (hasLocation) {
+                    geocoder.findCity(lat!!, lon!!)?.id
+                } else {
+                    null
+                }
+
                 results += MediaItemEntity(
                     uri = contentUri.toString(),
                     mediaStoreId = id,
                     mimeType = mimeType,
-                    isVideo = mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO,
-                    dateTakenUtc = effectiveDate,
-                    tzOffsetMin = tzOffsetMin,
+                    isVideo = isVideo,
+                    dateTakenUtc = captureInstant.toEpochMilli(),
+                    tzOffsetMin = offsetMinutes,
                     localDate = localDate,
-                    lat = null,
-                    lon = null,
-                    cityId = null,
-                    hasLocation = false,
+                    lat = lat,
+                    lon = lon,
+                    cityId = cityId,
+                    hasLocation = hasLocation,
                     phash = null,
                     faceCount = null,
                     labelJson = null,
@@ -85,6 +108,6 @@ class MediaStoreScanner(private val context: Context) {
             }
         }
 
-        return results
+        results
     }
 }

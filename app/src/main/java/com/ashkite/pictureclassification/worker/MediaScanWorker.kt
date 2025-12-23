@@ -5,7 +5,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.ashkite.pictureclassification.data.db.AppDatabase
+import com.ashkite.pictureclassification.data.geo.CityGeocoder
 import com.ashkite.pictureclassification.data.repo.MediaRepository
+import com.ashkite.pictureclassification.data.scan.MediaMetadataReader
 import com.ashkite.pictureclassification.data.scan.MediaStoreScanner
 
 class MediaScanWorker(
@@ -15,7 +17,9 @@ class MediaScanWorker(
 
     override suspend fun doWork(): Result {
         val database = AppDatabase.get(applicationContext)
-        val scanner = MediaStoreScanner(applicationContext)
+        val geocoder = CityGeocoder(database.cityDao())
+        val metadataReader = MediaMetadataReader(applicationContext)
+        val scanner = MediaStoreScanner(applicationContext, metadataReader, geocoder)
         val repository = MediaRepository(database, scanner)
 
         return try {
