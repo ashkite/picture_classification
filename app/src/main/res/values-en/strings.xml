@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">Picture Classification</string>
+
+    <string name="home_hero_title">Auto-organize your photos</string>
+    <string name="home_hero_subtitle">Analyze only on-device and group by place, date, people, and events.</string>
+    <string name="home_stat_media_count">All media</string>
+    <string name="home_stat_last_success">Last success</string>
+    <string name="home_status_title">Scan control</string>
+    <string name="home_status_media_indexed">Media indexed</string>
+    <string name="home_status_last_scan">Last scan</string>
+    <string name="home_status_last_success">Last success</string>
+    <string name="home_status_errors">Errors</string>
+    <string name="home_permission_media_granted">Media access granted</string>
+    <string name="home_permission_media_required">Media access required</string>
+    <string name="home_permission_location_enabled">Location metadata on</string>
+    <string name="home_permission_location_disabled">Location metadata off</string>
+    <string name="home_action_grant_permissions">Request permissions</string>
+    <string name="home_action_permissions_ok">Permissions OK</string>
+    <string name="home_action_scan_start">Start scan</string>
+    <string name="home_action_scan_running">Scanning...</string>
+    <string name="home_action_refresh">Refresh</string>
+    <string name="home_language_title">App language</string>
+    <string name="language_korean">Korean</string>
+    <string name="language_english">English</string>
+    <string name="language_japanese">Japanese</string>
+
+    <string name="home_section_places">Places</string>
+    <string name="home_section_dates">Dates</string>
+    <string name="home_section_people">People</string>
+    <string name="home_section_events">Events</string>
+    <string name="home_section_unknown">Location Unknown</string>
+    <string name="home_empty_places">No location data yet.</string>
+    <string name="home_empty_dates">No date groups yet.</string>
+    <string name="home_empty_people">No people tags yet.</string>
+    <string name="home_empty_events">No event tags yet.</string>
+    <string name="home_empty_unknown">No unknown-location items.</string>
+    <string name="home_unknown_all">All</string>
+
+    <string name="scan_status_scanning">Scanning</string>
+    <string name="scan_status_queued">Queued</string>
+    <string name="scan_status_completed">Completed</string>
+    <string name="scan_status_failed">Failed</string>
+    <string name="scan_status_cancelled">Cancelled</string>
+    <string name="scan_status_blocked">Blocked</string>
+    <string name="scan_status_idle">Idle</string>
+
+    <string name="media_back">Back</string>
+    <string name="media_add_tag">Add tag</string>
+    <string name="media_empty">No media found.</string>
+    <string name="media_video_badge">VIDEO</string>
+    <string name="media_tag_dialog_title">Add tag</string>
+    <string name="media_tag_dialog_name">Name</string>
+    <string name="media_tag_dialog_save">Save</string>
+    <string name="media_tag_dialog_cancel">Cancel</string>
+    <string name="media_tag_type_people">People</string>
+    <string name="media_tag_type_event">Event</string>
+
+    <string name="detail_place_default">Place</string>
+    <string name="detail_place_unknown">Unknown</string>
+    <string name="detail_date_subtitle">Date group</string>
+    <string name="detail_unknown_title_all">Location Unknown</string>
+    <string name="detail_unknown_title_date">Unknown - %1$s</string>
+    <string name="detail_unknown_subtitle">No GPS metadata</string>
+    <string name="detail_tag_default">Tag</string>
+    <string name="detail_tag_type_people">People</string>
+    <string name="detail_tag_type_event">Event</string>
+
+    <string name="tag_people_auto">Person</string>
+    <string name="tag_event_travel">Travel/Tourism</string>
+    <string name="tag_event_nature">Nature/Outdoor</string>
+    <string name="tag_event_city">City/Street</string>
+    <string name="tag_event_food">Food/Restaurant</string>
+    <string name="tag_event_cafe">Cafe/Dessert</string>
+    <string name="tag_event_party">Party/Celebration</string>
+    <string name="tag_event_wedding">Wedding</string>
+    <string name="tag_event_family">Family/Kids</string>
+    <string name="tag_event_work">Meeting/Work</string>
+    <string name="tag_event_performance">Performance/Stage</string>
+    <string name="tag_event_sports">Sports/Fitness</string>
+    <string name="tag_event_animals">Animals/Pets</string>
+    <string name="tag_event_beach">Beach/Sea</string>
+    <string name="tag_event_mountain">Mountain/Hiking</string>
+    <string name="tag_event_night">Night/Evening</string>
+
+    <string name="date_time_format">MMM d, yyyy HH:mm</string>
+    <string name="value_unknown">-</string>
+</resources>

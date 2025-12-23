@@ -1,0 +1,87 @@
+<resources>
+    <string name="app_name">写真整理</string>
+
+    <string name="home_hero_title">写真を自動で整理</string>
+    <string name="home_hero_subtitle">端末内だけで分析し、場所・日付・人物・イベントでまとめます。</string>
+    <string name="home_stat_media_count">全メディア</string>
+    <string name="home_stat_last_success">直近完了</string>
+    <string name="home_status_title">スキャン管理</string>
+    <string name="home_status_media_indexed">インデックス済みメディア</string>
+    <string name="home_status_last_scan">最終スキャン</string>
+    <string name="home_status_last_success">最終成功</string>
+    <string name="home_status_errors">エラー</string>
+    <string name="home_permission_media_granted">メディアアクセス許可</string>
+    <string name="home_permission_media_required">メディアアクセスが必要</string>
+    <string name="home_permission_location_enabled">位置メタデータ有効</string>
+    <string name="home_permission_location_disabled">位置メタデータ無効</string>
+    <string name="home_action_grant_permissions">権限を要求</string>
+    <string name="home_action_permissions_ok">権限OK</string>
+    <string name="home_action_scan_start">スキャン開始</string>
+    <string name="home_action_scan_running">スキャン中...</string>
+    <string name="home_action_refresh">更新</string>
+    <string name="home_language_title">アプリ言語</string>
+    <string name="language_korean">韓国語</string>
+    <string name="language_english">英語</string>
+    <string name="language_japanese">日本語</string>
+
+    <string name="home_section_places">場所</string>
+    <string name="home_section_dates">日付</string>
+    <string name="home_section_people">人物</string>
+    <string name="home_section_events">イベント</string>
+    <string name="home_section_unknown">位置なし</string>
+    <string name="home_empty_places">まだ位置データがありません。</string>
+    <string name="home_empty_dates">まだ日付グループがありません。</string>
+    <string name="home_empty_people">まだ人物タグがありません。</string>
+    <string name="home_empty_events">まだイベントタグがありません。</string>
+    <string name="home_empty_unknown">位置なしの項目はありません。</string>
+    <string name="home_unknown_all">すべて</string>
+
+    <string name="scan_status_scanning">スキャン中</string>
+    <string name="scan_status_queued">待機中</string>
+    <string name="scan_status_completed">完了</string>
+    <string name="scan_status_failed">失敗</string>
+    <string name="scan_status_cancelled">キャンセル</string>
+    <string name="scan_status_blocked">ブロック</string>
+    <string name="scan_status_idle">待機</string>
+
+    <string name="media_back">戻る</string>
+    <string name="media_add_tag">タグ追加</string>
+    <string name="media_empty">メディアがありません。</string>
+    <string name="media_video_badge">動画</string>
+    <string name="media_tag_dialog_title">タグ追加</string>
+    <string name="media_tag_dialog_name">名前</string>
+    <string name="media_tag_dialog_save">保存</string>
+    <string name="media_tag_dialog_cancel">キャンセル</string>
+    <string name="media_tag_type_people">人物</string>
+    <string name="media_tag_type_event">イベント</string>
+
+    <string name="detail_place_default">場所</string>
+    <string name="detail_place_unknown">不明</string>
+    <string name="detail_date_subtitle">日付別</string>
+    <string name="detail_unknown_title_all">位置不明</string>
+    <string name="detail_unknown_title_date">位置不明 - %1$s</string>
+    <string name="detail_unknown_subtitle">GPSメタデータなし</string>
+    <string name="detail_tag_default">タグ</string>
+    <string name="detail_tag_type_people">人物</string>
+    <string name="detail_tag_type_event">イベント</string>
+
+    <string name="tag_people_auto">人物</string>
+    <string name="tag_event_travel">旅行/観光</string>
+    <string name="tag_event_nature">自然/屋外</string>
+    <string name="tag_event_city">街/通り</string>
+    <string name="tag_event_food">食事/レストラン</string>
+    <string name="tag_event_cafe">カフェ/デザート</string>
+    <string name="tag_event_party">パーティー/お祝い</string>
+    <string name="tag_event_wedding">結婚式</string>
+    <string name="tag_event_family">家族/子ども</string>
+    <string name="tag_event_work">仕事/会議</string>
+    <string name="tag_event_performance">公演/ステージ</string>
+    <string name="tag_event_sports">スポーツ/運動</string>
+    <string name="tag_event_animals">動物/ペット</string>
+    <string name="tag_event_beach">海/ビーチ</string>
+    <string name="tag_event_mountain">山/ハイキング</string>
+    <string name="tag_event_night">夜景/夜</string>
+
+    <string name="date_time_format">yyyy/MM/dd HH:mm</string>
+    <string name="value_unknown">-</string>
+</resources>

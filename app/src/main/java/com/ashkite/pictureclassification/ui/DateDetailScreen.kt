@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.ashkite.pictureclassification.R
 import com.ashkite.pictureclassification.data.db.AppDatabase
 import com.ashkite.pictureclassification.data.model.MediaItemEntity
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +28,7 @@ fun DateDetailScreen(localDate: String, onBack: () -> Unit) {
 
     MediaGridScreen(
         title = localDate,
-        subtitle = "Date group",
+        subtitle = stringResource(R.string.detail_date_subtitle),
         items = items,
         onBack = onBack
     )

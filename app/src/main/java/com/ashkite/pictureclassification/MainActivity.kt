@@ -8,12 +8,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.ashkite.pictureclassification.ui.AppNavHost
 import com.ashkite.pictureclassification.ui.theme.PictureClassificationTheme
 import com.ashkite.pictureclassification.worker.CitySeedScheduler
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("ko"))
+        }
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         CitySeedScheduler.enqueueOneTime(applicationContext)

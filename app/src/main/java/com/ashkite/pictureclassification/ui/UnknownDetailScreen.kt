@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.ashkite.pictureclassification.R
 import com.ashkite.pictureclassification.data.db.AppDatabase
 import com.ashkite.pictureclassification.data.model.MediaItemEntity
 import kotlinx.coroutines.Dispatchers
@@ -28,15 +30,13 @@ fun UnknownDetailScreen(localDate: String?, onBack: () -> Unit) {
         }
     }
 
-    val title = if (localDate == null) {
-        "Location Unknown"
-    } else {
-        "Unknown - $localDate"
-    }
-
     MediaGridScreen(
-        title = title,
-        subtitle = "No GPS metadata",
+        title = if (localDate == null) {
+            stringResource(R.string.detail_unknown_title_all)
+        } else {
+            stringResource(R.string.detail_unknown_title_date, localDate)
+        },
+        subtitle = stringResource(R.string.detail_unknown_subtitle),
         items = items,
         onBack = onBack
     )

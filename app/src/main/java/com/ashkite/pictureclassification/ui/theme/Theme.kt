@@ -1,55 +1,74 @@
 package com.ashkite.pictureclassification.ui.theme
 
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Blue80,
-    onPrimary = Gray10,
-    secondary = Teal40,
-    onSecondary = Gray10,
-    background = Gray10,
-    onBackground = Gray90,
-    surface = Gray10,
-    onSurface = Gray90
+    primary = SageDark,
+    onPrimary = Night,
+    primaryContainer = Sage,
+    onPrimaryContainer = Cream,
+    secondary = TerracottaDark,
+    onSecondary = Night,
+    secondaryContainer = Terracotta,
+    onSecondaryContainer = Cream,
+    tertiary = SlateDark,
+    onTertiary = Night,
+    tertiaryContainer = Slate,
+    onTertiaryContainer = Cream,
+    background = Night,
+    onBackground = Sand,
+    surface = NightSurface,
+    onSurface = Sand,
+    surfaceVariant = NightVariant,
+    onSurfaceVariant = Sandstone,
+    outline = NightOutline,
+    error = ErrorDark,
+    onError = OnErrorDark,
+    errorContainer = ErrorContainerDark,
+    onErrorContainer = OnErrorContainerDark
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Blue40,
-    onPrimary = androidx.compose.ui.graphics.Color.White,
-    secondary = Teal40,
-    onSecondary = androidx.compose.ui.graphics.Color.White,
-    background = OffWhite,
-    onBackground = Gray10,
-    surface = androidx.compose.ui.graphics.Color.White,
-    onSurface = Gray10
+    primary = Sage,
+    onPrimary = Cream,
+    primaryContainer = SageLight,
+    onPrimaryContainer = Ink,
+    secondary = Terracotta,
+    onSecondary = Cream,
+    secondaryContainer = TerracottaLight,
+    onSecondaryContainer = Ink,
+    tertiary = Slate,
+    onTertiary = Cream,
+    tertiaryContainer = SlateLight,
+    onTertiaryContainer = Ink,
+    background = Sand,
+    onBackground = Ink,
+    surface = Cream,
+    onSurface = Ink,
+    surfaceVariant = Sandstone,
+    onSurfaceVariant = InkSoft,
+    outline = OutlineWarm,
+    error = ErrorLight,
+    onError = OnErrorLight,
+    errorContainer = ErrorContainerLight,
+    onErrorContainer = OnErrorContainerLight
 )
 
 @Composable
 fun PictureClassificationTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        useDarkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        shapes = Shapes,
         content = content
     )
 }
