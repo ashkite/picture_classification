@@ -6,14 +6,13 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +34,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.ashkite.pictureclassification.data.model.DateCount
+import com.ashkite.pictureclassification.data.model.PlaceCount
+import com.ashkite.pictureclassification.data.model.TagCount
 import com.ashkite.pictureclassification.worker.MediaScanScheduler
 import java.time.Instant
 import java.time.ZoneId
@@ -44,14 +46,19 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewModel()) {
     val context = LocalContext.current
-    val sections = listOf(
-        "Places",
-        "Dates",
-        "People",
-        "Events",
-        "Location Unknown"
-    )
     val uiState by viewModel.state.collectAsState()
+    val placeLines = uiState.placeCounts.map { formatPlace(it) }
+    val dateLines = uiState.dateCounts.map { formatDateCount(it) }
+    val peopleLines = uiState.peopleCounts.map { formatTagCount(it) }
+    val eventLines = uiState.eventCounts.map { formatTagCount(it) }
+    val unknownLines = if (uiState.unknownTotal == 0 && uiState.unknownDateCounts.isEmpty()) {
+        emptyList()
+    } else {
+        buildList {
+            add("Total: ${uiState.unknownTotal}")
+            addAll(uiState.unknownDateCounts.map { formatDateCount(it) })
+        }
+    }
 
     val requiredPermissions = remember { buildPermissions() }
     var hasReadPermission by remember {
@@ -140,7 +147,7 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
                             }
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             val needsPermission = !hasReadPermission || !hasLocationPermission
                             Button(
                                 onClick = {
@@ -170,14 +177,40 @@ fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = viewMod
                 }
             }
 
-            items(sections) { label ->
-                Card {
-                    Text(
-                        text = label,
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                }
+            item {
+                SectionCard(
+                    title = "Places",
+                    lines = placeLines,
+                    emptyText = "No location data yet."
+                )
+            }
+            item {
+                SectionCard(
+                    title = "Dates",
+                    lines = dateLines,
+                    emptyText = "No date groups yet."
+                )
+            }
+            item {
+                SectionCard(
+                    title = "People",
+                    lines = peopleLines,
+                    emptyText = "No people tags yet."
+                )
+            }
+            item {
+                SectionCard(
+                    title = "Events",
+                    lines = eventLines,
+                    emptyText = "No event tags yet."
+                )
+            }
+            item {
+                SectionCard(
+                    title = "Location Unknown",
+                    lines = unknownLines,
+                    emptyText = "No unknown-location items."
+                )
             }
         }
     }
@@ -216,4 +249,40 @@ private fun formatEpoch(epoch: Long?): String {
     if (epoch == null || epoch == 0L) return "-"
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
     return Instant.ofEpochMilli(epoch).atZone(ZoneId.systemDefault()).format(formatter)
+}
+
+@Composable
+private fun SectionCard(title: String, lines: List<String>, emptyText: String) {
+    Card {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleSmall
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            if (lines.isEmpty()) {
+                Text(
+                    text = emptyText,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                lines.forEach { line ->
+                    Text(text = line)
+                }
+            }
+        }
+    }
+}
+
+private fun formatPlace(place: PlaceCount): String {
+    val name = if (place.nameKo.isNotBlank()) place.nameKo else place.nameEn
+    return "$name (${place.countryCode}) - ${place.count}"
+}
+
+private fun formatDateCount(count: DateCount): String {
+    return "${count.localDate} - ${count.count}"
+}
+
+private fun formatTagCount(count: TagCount): String {
+    return "${count.name} - ${count.count}"
 }

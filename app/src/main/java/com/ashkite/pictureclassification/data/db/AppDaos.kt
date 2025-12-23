@@ -6,10 +6,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import com.ashkite.pictureclassification.data.model.CityEntity
+import com.ashkite.pictureclassification.data.model.DateCount
 import com.ashkite.pictureclassification.data.model.FaceClusterEntity
 import com.ashkite.pictureclassification.data.model.MediaItemEntity
 import com.ashkite.pictureclassification.data.model.MediaTagCrossRef
+import com.ashkite.pictureclassification.data.model.PlaceCount
 import com.ashkite.pictureclassification.data.model.ScanStateEntity
+import com.ashkite.pictureclassification.data.model.TagCount
 import com.ashkite.pictureclassification.data.model.TagEntity
 
 @Dao
@@ -22,6 +25,30 @@ interface MediaDao {
 
     @Query("SELECT COUNT(*) FROM media_item")
     suspend fun count(): Int
+
+    @Query(
+        "SELECT localDate AS localDate, COUNT(*) AS count " +
+            "FROM media_item GROUP BY localDate ORDER BY localDate DESC LIMIT :limit"
+    )
+    suspend fun getDateCounts(limit: Int): List<DateCount>
+
+    @Query(
+        "SELECT city.id AS cityId, city.nameKo AS nameKo, city.nameEn AS nameEn, " +
+            "city.countryCode AS countryCode, COUNT(media_item.uri) AS count " +
+            "FROM media_item INNER JOIN city ON media_item.cityId = city.id " +
+            "GROUP BY city.id ORDER BY count DESC LIMIT :limit"
+    )
+    suspend fun getPlaceCounts(limit: Int): List<PlaceCount>
+
+    @Query("SELECT COUNT(*) FROM media_item WHERE hasLocation = 0")
+    suspend fun countLocationUnknown(): Int
+
+    @Query(
+        "SELECT localDate AS localDate, COUNT(*) AS count " +
+            "FROM media_item WHERE hasLocation = 0 " +
+            "GROUP BY localDate ORDER BY localDate DESC LIMIT :limit"
+    )
+    suspend fun getUnknownDateCounts(limit: Int): List<DateCount>
 }
 
 @Dao
@@ -43,6 +70,14 @@ interface CityDao {
 interface TagDao {
     @Upsert
     suspend fun upsert(tag: TagEntity)
+
+    @Query(
+        "SELECT tag.id AS tagId, tag.name AS name, tag.type AS type, " +
+            "COUNT(media_tag.mediaUri) AS count " +
+            "FROM tag INNER JOIN media_tag ON tag.id = media_tag.tagId " +
+            "WHERE tag.type = :type GROUP BY tag.id ORDER BY count DESC LIMIT :limit"
+    )
+    suspend fun getTagCounts(type: String, limit: Int): List<TagCount>
 }
 
 @Dao
