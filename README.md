@@ -57,7 +57,6 @@
 
 ## 문서
 
-- `docs/tflite_pipeline.md`: 모델 학습/변환/배포 파이프라인
 - `docs/label_mapping.md`: 이벤트 카테고리 라벨 매핑 초안
 - `docs/offline_geocoding.md`: 오프라인 도시 매핑 설계
 - `docs/privacy_policy.md`: 프라이버시 정책 초안

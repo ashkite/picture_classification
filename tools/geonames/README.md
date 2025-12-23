@@ -1,7 +1,10 @@
 # GeoNames city seed
 
 This script downloads the GeoNames `cities15000` dataset and converts it into
-`app/src/main/assets/cities_seed.csv` using ASCII names for compatibility.
+`app/src/main/assets/cities_seed.csv` using ASCII English names and Korean
+alternate names when available.
+
+Note: the alternate names download is large and may take a few minutes.
 
 Run:
 
