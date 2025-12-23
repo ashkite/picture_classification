@@ -10,6 +10,7 @@ GEONAMES_URL = "https://download.geonames.org/export/dump/cities15000.zip"
 OUTPUT_PATH = Path("app/src/main/assets/cities_seed.csv")
 
 NAME_IDX = 1
+ASCIINAME_IDX = 2
 LAT_IDX = 4
 LON_IDX = 5
 COUNTRY_IDX = 8
@@ -34,7 +35,8 @@ def main() -> int:
             parts = line.split("\t")
             if len(parts) <= COUNTRY_IDX:
                 continue
-            name = parts[NAME_IDX].strip()
+            name = parts[ASCIINAME_IDX].strip() or parts[NAME_IDX].strip()
+            name = name.encode("ascii", errors="ignore").decode("ascii")
             lat = parts[LAT_IDX].strip()
             lon = parts[LON_IDX].strip()
             country = parts[COUNTRY_IDX].strip()

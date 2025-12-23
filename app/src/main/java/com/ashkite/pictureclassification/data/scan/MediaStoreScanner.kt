@@ -80,12 +80,13 @@ class MediaStoreScanner(
                     .toString()
                 val lat = metadata.lat
                 val lon = metadata.lon
-                val hasLocation = lat != null && lon != null
-                val cityId = if (hasLocation) {
+                val hasGps = lat != null && lon != null
+                val cityId = if (hasGps) {
                     geocoder.findCity(lat!!, lon!!)?.id
                 } else {
                     null
                 }
+                val hasLocation = cityId != null
 
                 results += MediaItemEntity(
                     uri = contentUri.toString(),

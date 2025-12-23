@@ -1,7 +1,7 @@
 # GeoNames city seed
 
 This script downloads the GeoNames `cities15000` dataset and converts it into
-`app/src/main/assets/cities_seed.csv`.
+`app/src/main/assets/cities_seed.csv` using ASCII names for compatibility.
 
 Run:
 

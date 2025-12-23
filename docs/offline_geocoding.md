@@ -13,7 +13,7 @@ Goal: map GPS coordinates to a city/country on-device without network.
 - Replace the sample CSV with a full dataset for production
 
 ## Build helper
-- `tools/geonames/build_cities_csv.py` downloads GeoNames cities15000 and rewrites the CSV
+- `tools/geonames/build_cities_csv.py` downloads GeoNames cities15000 and rewrites the CSV (ASCII names)
 
 ## Storage
 - Preprocess into SQLite (or Room import) at build time

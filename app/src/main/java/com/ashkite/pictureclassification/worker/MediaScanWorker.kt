@@ -6,6 +6,7 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.ashkite.pictureclassification.data.db.AppDatabase
 import com.ashkite.pictureclassification.data.geo.CityGeocoder
+import com.ashkite.pictureclassification.data.geo.CitySeeder
 import com.ashkite.pictureclassification.data.repo.MediaRepository
 import com.ashkite.pictureclassification.data.scan.MediaMetadataReader
 import com.ashkite.pictureclassification.data.scan.MediaStoreScanner
@@ -17,6 +18,9 @@ class MediaScanWorker(
 
     override suspend fun doWork(): Result {
         val database = AppDatabase.get(applicationContext)
+        if (database.cityDao().count() == 0) {
+            CitySeeder(applicationContext, database.cityDao()).seedIfNeeded()
+        }
         val geocoder = CityGeocoder(database.cityDao())
         val metadataReader = MediaMetadataReader(applicationContext)
         val scanner = MediaStoreScanner(applicationContext, metadataReader, geocoder)

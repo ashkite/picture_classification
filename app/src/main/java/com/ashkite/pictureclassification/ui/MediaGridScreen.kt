@@ -40,7 +40,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.decode.VideoFrameDecoder
 import coil.request.ImageRequest
 import com.ashkite.pictureclassification.data.db.AppDatabase
 import com.ashkite.pictureclassification.data.model.MediaItemEntity
@@ -57,6 +59,11 @@ fun MediaGridScreen(
     onBack: () -> Unit
 ) {
     val context = LocalContext.current.applicationContext
+    val imageLoader = remember {
+        ImageLoader.Builder(context)
+            .components { add(VideoFrameDecoder.Factory()) }
+            .build()
+    }
     val tagRepository = remember { TagRepository(AppDatabase.get(context)) }
     val scope = rememberCoroutineScope()
     var tagTarget by remember { mutableStateOf<MediaItemEntity?>(null) }
@@ -120,6 +127,7 @@ fun MediaGridScreen(
                 items(items) { item ->
                     MediaGridItem(
                         item = item,
+                        imageLoader = imageLoader,
                         onAddTag = { tagTarget = item }
                     )
                 }
@@ -131,6 +139,7 @@ fun MediaGridScreen(
 @Composable
 private fun MediaGridItem(
     item: MediaItemEntity,
+    imageLoader: ImageLoader,
     onAddTag: () -> Unit
 ) {
     val context = LocalContext.current
@@ -144,12 +153,13 @@ private fun MediaGridItem(
             .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        AsyncImage(
-            model = request,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
+    AsyncImage(
+        model = request,
+        imageLoader = imageLoader,
+        contentDescription = null,
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f),
             contentScale = ContentScale.Crop
         )
         if (item.isVideo) {
