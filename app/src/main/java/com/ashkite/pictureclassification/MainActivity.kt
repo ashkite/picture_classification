@@ -10,11 +10,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.ashkite.pictureclassification.ui.HomeScreen
 import com.ashkite.pictureclassification.ui.theme.PictureClassificationTheme
+import com.ashkite.pictureclassification.worker.CitySeedScheduler
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        CitySeedScheduler.enqueueOneTime(applicationContext)
         setContent {
             PictureClassificationTheme {
                 Surface(

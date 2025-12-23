@@ -53,6 +53,7 @@
 - 날짜: DateTimeOriginal > DATE_TAKEN > 파일 수정시간
 - 타임존: EXIF 오프셋/위치 기반 보정
 - 역지오코딩: 오프라인 도시 DB(예: GeoNames) + geohash 인덱스
+- 초기 시드: `app/src/main/assets/cities_seed.csv`(MVP용 샘플)
 
 ## 문서
 

@@ -6,6 +6,12 @@ Goal: map GPS coordinates to a city/country on-device without network.
 - GeoNames cities15000
 - Fields: name, countryCode, latitude, longitude, population
 
+## Asset import (MVP)
+- Asset file: `app/src/main/assets/cities_seed.csv`
+- CSV columns: `name_en,name_ko,country_code,lat,lon`
+- Seeder runs once on app start via WorkManager
+- Replace the sample CSV with a full dataset for production
+
 ## Storage
 - Preprocess into SQLite (or Room import) at build time
 - Columns: id, name_ko, name_en, country_code, lat, lon, geohash

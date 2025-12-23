@@ -31,8 +31,12 @@ interface CityDao {
 
     @Query("SELECT * FROM city WHERE geohash = :geohash")
     suspend fun findByGeohash(geohash: String): List<CityEntity>
+
     @Query("SELECT * FROM city WHERE geohash LIKE :prefix || '%' LIMIT :limit")
     suspend fun findByGeohashPrefix(prefix: String, limit: Int): List<CityEntity>
+
+    @Query("SELECT COUNT(*) FROM city")
+    suspend fun count(): Int
 }
 
 @Dao
