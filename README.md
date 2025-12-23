@@ -54,6 +54,12 @@
 - 타임존: EXIF 오프셋/위치 기반 보정
 - 역지오코딩: 오프라인 도시 DB(예: GeoNames) + geohash 인덱스
 
+## 문서
+
+- `docs/tflite_pipeline.md`: 모델 학습/변환/배포 파이프라인
+- `docs/label_mapping.md`: 이벤트 카테고리 라벨 매핑 초안
+- `docs/offline_geocoding.md`: 오프라인 도시 매핑 설계
+
 ## 저장소/아키텍처 (예정)
 
 - Room + WorkManager + Compose
@@ -78,4 +84,3 @@
 3) TFLite 모델 학습/변환/통합  
 4) 정확도/성능 튜닝 및 사용자 수정 UX  
 5) 배포 준비 및 테스트
-
